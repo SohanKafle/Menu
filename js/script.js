@@ -1,93 +1,121 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Search input
-    const searchInput = document.querySelector('input[type="search"]');
+    const categories = [
+        { name: "CLASSIC COFFEE", items: 9 },
+        { name: "ICED COFFEE", items: 15 },
+        { name: "FRAPPE", items: 4 },
+        { name: "REFRESHERS", items: 9 },
+        { name: "SMOOTHIE MILKSHAKE", items: 11 },
+        { name: "SOFT DRINKS", items: 19 },
+        { name: "HOT BEVERAGE", items: 7 },
+        { name: "LASSI", items: 8 },
+        { name: "SAZE SPECIAL", items: 5 },
+        { name: "SMOKE", items: 15 },
+        { name: "WINE", items: 6 },
+        { name: "BEER", items: 5 },
+        { name: "COCKTAILS", items: 8 },
+        { name: "HARD DRINKS", items: 17 },
+        { name: "BIRIYANI", items: 3 },
+        { name: "NAAN ROTI", items: 9 },
+        { name: "VEG CURRY", items: 8 },
+        { name: "NON VEG CURRY", items: 6 },
+        { name: "PIZZA", items: 14 },
+        { name: "BURGER", items: 4 },
+        { name: "ROLLS SHAWARMA", items: 4 },
+        { name: "MOMO", items: 10 },
+        { name: "NOODLES", items: 4 },
+        { name: "SIZZLER", items: 4 },
+        { name: "SOUP", items: 4 },
+        { name: "RICE", items: 4 },
+        { name: "VEG STARTERS", items: 4 },
+        { name: "TANDOOR ITEMS", items: 4 },
+        { name: "NON VEG STARTERS", items: 4 }
+    ];
 
-    // All category cards
-    const categories = document.querySelectorAll("article");
+    const container =
+        document.getElementById("menuCategories");
 
-    // Search functionality
-    if (searchInput) {
+    const search =
+        document.getElementById("search");
 
-        searchInput.addEventListener("input", function () {
+    function renderCategories(data) {
 
-            const keyword = this.value.toLowerCase().trim();
+        container.innerHTML = "";
 
-            categories.forEach(category => {
+        data.forEach(category => {
 
-                const text =
-                    category.textContent.toLowerCase();
+            const article =
+                document.createElement("article");
 
-                if (text.includes(keyword)) {
-                    category.style.display = "";
-                } else {
-                    category.style.display = "none";
-                }
+            article.className =
+                "group overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-orange-400/50 cursor-pointer";
+
+            article.innerHTML = `
+                <div class="h-[3px] w-full bg-gradient-to-r from-primary via-orange-400 to-amber-300"></div>
+
+                <div class="p-5 md:p-7">
+
+                    <button class="w-full flex items-center justify-between text-left">
+
+                        <h2 class="text-xl md:text-2xl font-bold uppercase tracking-wider">
+                            ${category.name}
+                        </h2>
+
+                        <span class="text-sm opacity-70 whitespace-nowrap">
+                            ${category.items} items
+                        </span>
+
+                    </button>
+
+                </div>
+            `;
+
+            article.addEventListener("click", () => {
+
+                document
+                    .querySelectorAll("#menuCategories article")
+                    .forEach(card => {
+
+                        card.classList.remove(
+                            "ring-2",
+                            "ring-orange-500"
+                        );
+
+                    });
+
+                article.classList.add(
+                    "ring-2",
+                    "ring-orange-500"
+                );
+
+                console.log(
+                    "Selected Category:",
+                    category.name
+                );
 
             });
+
+            container.appendChild(article);
 
         });
 
     }
 
-    // Click animation and navigation
-    categories.forEach(category => {
+    renderCategories(categories);
 
-        category.style.cursor = "pointer";
+    search.addEventListener("input", () => {
 
-        category.addEventListener("click", () => {
+        const keyword =
+            search.value.toLowerCase();
 
-            // Remove active state from all cards
-            categories.forEach(c => {
-                c.classList.remove(
-                    "ring-2",
-                    "ring-orange-500",
-                    "scale-[1.02]"
-                );
-            });
-
-            // Add active state
-            category.classList.add(
-                "ring-2",
-                "ring-orange-500",
-                "scale-[1.02]"
+        const filtered =
+            categories.filter(cat =>
+                cat.name
+                    .toLowerCase()
+                    .includes(keyword)
             );
 
-            const title =
-                category.querySelector("h2")
-                ?.innerText
-                ?.trim();
-
-            console.log("Selected Category:", title);
-
-
-        });
-
-    });
-
-    // Smooth hover effect
-    categories.forEach(category => {
-
-        category.style.transition =
-            "all 0.3s ease";
-
-        category.addEventListener("mouseenter", () => {
-
-            category.style.transform =
-                "translateY(-4px)";
-
-        });
-
-        category.addEventListener("mouseleave", () => {
-
-            if (
-                !category.classList.contains("ring-2")
-            ) {
-                category.style.transform =
-                    "translateY(0)";
-            }
-
-        });
+        renderCategories(filtered);
 
     });
 
